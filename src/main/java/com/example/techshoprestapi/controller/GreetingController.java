@@ -11,15 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/greet")
 @PreAuthorize("isAuthenticated()")
 public class GreetingController {
 
-    @GetMapping()
+    @GetMapping("/greet")
     @PreAuthorize("hasAuthority('NICE')")
     public String getGreeting(JwtAuthenticationToken auth) {
         return "Hi %s! You are granted with: %s.".formatted(
                 auth.getToken().getClaimAsString(StandardClaimNames.PREFERRED_USERNAME),
                 auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(", ", "[", "]")));
+    }
+
+    @GetMapping("/hello")
+    public String hello(){
+        return "hello jwt";
     }
 }
